@@ -16,8 +16,8 @@ if ($opcion === "listar") {
     listar();
 }
 
-if ($opcion === "mostrar") {
-    mostrar();
+if ($opcion === "mostrarTodos") {
+    mostrarTodos();
 }
 
 if ($opcion === "getCliente") {
@@ -191,6 +191,56 @@ function mostrar() {
     }
     mysqli_close($conexion);
     echo($mensaje);
+}
+
+function mostrarTodos() {
+    if (!$conexion = new mysqli("localhost", "root", "", "facturacion")) {
+        die("Error al conectarse a la base de datos");
+    }
+    
+    $mensaje = "";
+    $sql = "SELECT td.descripcion,c.documento, c.nombres, c.apellidos, c.direccion, ci.nombre_ciudad, c.telefono,"
+            ." c.correo FROM cliente c,tipo_de_documento td, ciudad ci WHERE "
+            . " c.cod_tipo_documento=td.cod_tipo_documento AND ci.codigo_ciudad=c.cod_ciudad";
+    
+    $consulta = mysqli_query($conexion, $sql);
+
+    $filas = mysqli_num_rows($consulta);
+
+    if ($filas === 0) {
+        $mensaje = "<p>No hay ningún usuario con ese número de documento</p>";
+    } else {
+        $mensaje = '<table id="busquedaCliente" class="highlight centered responsive-table"> 
+                <thead>
+                    <tr>                        
+                        <th data-field="idTipo">Tipo Doc.</th>
+                        <th data-field="id">No. Identificación</th>                        
+                        <th data-field="nombres">Nombre del cliente</th>
+                        <th data-field="apellidos">Apellidos</th>                        
+                        <th data-field="direccion">Dirección</th>
+                        <th data-field="idCiudad">Ciudad</th>
+                        <th data-field="telefono">Teléfono</th>
+                        <th data-field="correo">correo</th>                   
+                        <th data-field="modificar"></th>                 
+                    </tr>
+                </thead>
+                <tbody>';
+
+        while ($resultados = mysqli_fetch_array($consulta)) {
+            $mensaje.='<tr>
+                        <td>' . $resultados[0] . '</td>
+                        <td>' . $resultados[1] . '</td>
+                        <td>' . $resultados[2] . '</td>
+                        <td>' . $resultados[3] . '</td>
+                        <td>' . $resultados[4] . '</td>
+                        <td>' . $resultados[5] . '</td>
+                        <td>' . $resultados[6] . '</td>
+                        <td>' . $resultados[7] . '</td>                        
+                    </tr>'; //Output
+        }$mensaje.='</tbody></table>';
+    }
+    mysqli_close($conexion);
+    echo $mensaje;
 }
 
 function getCliente(){

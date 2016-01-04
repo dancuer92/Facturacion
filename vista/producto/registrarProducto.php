@@ -6,7 +6,7 @@
                 <div class="input-field col s12 m6 l12">
                     <i class="material-icons prefix">person_pin</i>
                     <input id="nombrePro" name="nombrePro" type="text" maxlength="30" class="validate" required onkeyup="autocompletProd()">
-                    <ul id="nombresProductos"></ul>
+                    <ul id="nombresProductos" class="left"></ul>
                     <label for="nombrePro">Nombre</label>                           
                 </div>
                 <div class="input-field col s12 m6 l3">
@@ -71,7 +71,7 @@
         var min_length = 0; // min caracters to display the autocomplete
         var keyword = $('#nombrePro').val();
         if (keyword.length >= min_length && keyword !== "") {
-            $.post("controlador/control_producto.php", {valorBusqueda: keyword, opcion: "listar"},
+            $.post("controlador/control_producto.php", {valorBusqueda: keyword, opcion: "mostrar"},
             function (mensaje) {
                 $('#nombresProductos').show();
                 $('#nombresProductos').html(mensaje);
@@ -82,6 +82,11 @@
             Materialize.toast("Error seleccionando un nombre",3000,'rounded');
         }
     };    
+    
+    function set_item_productos(item) {
+        $('#nombrePro').val(item);
+        $('#nombresProductos').hide();        
+    };
     
 
 </script>

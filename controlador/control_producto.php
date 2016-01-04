@@ -16,6 +16,10 @@ if($opcion==="getProductos"){
     getProductos();
 }
 
+if($opcion==="mostrar"){
+    mostrar();
+}
+
 function registrar() {
     if (!$conexion = new mysqli("localhost", "root", "", "facturacion")) {
         die("Error al conectarse a la base de datos");
@@ -117,6 +121,28 @@ function getProductos() {
             $index++;
         }
         $mensaje.='</tbody></table>';
+    }
+    mysqli_close($conexion);
+    $mensaje2=  str_replace("&", "'", $mensaje);
+    echo $mensaje2;
+}
+
+function mostrar() {
+    if (!$conexion = new mysqli("localhost", "root", "", "facturacion")) {
+        die("Error al conectarse a la base de datos");
+    }
+    $mensaje = "";    
+    $sql = "SELECT p.nombre FROM producto p GROUP BY p.nombre;";
+
+    $consulta = mysqli_query($conexion, $sql);
+    $filas = mysqli_num_rows($consulta);
+
+    if ($filas === 0) {
+        $mensaje = "<p>No hay ningún producto registrado'</p>";
+    } else {
+        while ($resultados = mysqli_fetch_array($consulta)) {
+            $mensaje.='<li onclick="set_item_productos(&'.$resultados[0].'&)">'.$resultados[0].'</li>';        
+        }
     }
     mysqli_close($conexion);
     $mensaje2=  str_replace("&", "'", $mensaje);

@@ -12,7 +12,7 @@
     });
 
     function listarCliente() {
-        $.post("controlador/control_cliente.php", {opcion: "listar"},
+        $.post("controlador/control_cliente.php", {opcion: "mostrarTodos"},
         function (mensaje) {
             $("#resultadoListarCliente").html(mensaje);
         });
